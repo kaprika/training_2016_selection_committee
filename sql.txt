@@ -1,0 +1,117 @@
+CREATE TABLE "enrolee" (
+	"id" serial NOT NULL,
+	"user_credentials_id" int NOT NULL,
+	"first_name" character varying(100) NOT NULL,
+	"last_name" character varying(100) NOT NULL,
+	"certificate" numeric NOT NULL,
+	"faculty_id" int NOT NULL,
+	"date_of_registration" TIMESTAMP NOT NULL,
+	CONSTRAINT enrolee_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "faculty" (
+	"id" serial NOT NULL,
+	"name" character varying(200) NOT NULL UNIQUE,
+	"plan" int NOT NULL,
+	"end_date_set" TIMESTAMP NOT NULL,
+	CONSTRAINT faculty_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "subject" (
+	"id" serial NOT NULL,
+	"name" character varying(200) NOT NULL UNIQUE,
+	CONSTRAINT subject_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "faculty_2_subject" (
+	"faculty_id" int NOT NULL,
+	"subject_id" int NOT NULL
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "user_credentials" (
+	"id" serial NOT NULL,
+	"email" character varying(100) NOT NULL,
+	"password" character varying(100) NOT NULL,
+	"role" int NOT NULL,
+	CONSTRAINT user_credentials_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "administrator" (
+	"id" serial NOT NULL,
+	"user_credentials_id" int NOT NULL,
+	"first_name" character varying(100) NOT NULL,
+	"last_name" character varying(100) NOT NULL,
+	CONSTRAINT administrator_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE " scores_in_subjects" (
+	"id" serial NOT NULL,
+	"enrolee_id" int NOT NULL,
+	"subject_id" int NOT NULL,
+	"points" int NOT NULL,
+	CONSTRAINT  scores_in_subjects_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "sheet" (
+	"id" serial NOT NULL,
+	"enrolee_id" int NOT NULL,
+	"faculty_id" int NOT NULL,
+	"average_score" numeric NOT NULL,
+	CONSTRAINT sheet_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+ALTER TABLE "enrolee" ADD CONSTRAINT "enrolee_fk0" FOREIGN KEY ("user_credentials_id") REFERENCES "user_credentials"("id");
+ALTER TABLE "enrolee" ADD CONSTRAINT "enrolee_fk1" FOREIGN KEY ("faculty_id") REFERENCES "faculty"("id");
+
+
+
+ALTER TABLE "faculty_2_subject" ADD CONSTRAINT "faculty_2_subject_fk0" FOREIGN KEY ("faculty_id") REFERENCES "faculty"("id");
+ALTER TABLE "faculty_2_subject" ADD CONSTRAINT "faculty_2_subject_fk1" FOREIGN KEY ("subject_id") REFERENCES "subject"("id");
+
+
+ALTER TABLE "administrator" ADD CONSTRAINT "administrator_fk0" FOREIGN KEY ("user_credentials_id") REFERENCES "user_credentials"("id");
+
+ALTER TABLE " scores_in_subjects" ADD CONSTRAINT " scores_in_subjects_fk0" FOREIGN KEY ("enrolee_id") REFERENCES "enrolee"("id");
+ALTER TABLE " scores_in_subjects" ADD CONSTRAINT " scores_in_subjects_fk1" FOREIGN KEY ("subject_id") REFERENCES "subject"("id");
+
+ALTER TABLE "sheet" ADD CONSTRAINT "sheet_fk0" FOREIGN KEY ("enrolee_id") REFERENCES "enrolee"("id");
+ALTER TABLE "sheet" ADD CONSTRAINT "sheet_fk1" FOREIGN KEY ("faculty_id") REFERENCES "faculty"("id");
+
+ALTER TABLE public.faculty_2_subject
+  ADD CONSTRAINT faculty_2_subject_faculty_id_subject_id_key UNIQUE(faculty_id, subject_id);
+
+ALTER TABLE public.sheet
+  ADD CONSTRAINT sheet_enrolee_id_faculty_id_key UNIQUE(enrolee_id, faculty_id);
+
