@@ -1,2 +1,7 @@
-.settings/org.eclipse.m2e.core.prefs
 .project
+.settings/
+dataccess/.classpath
+datamodel/.classpath
+services/.classpath
+.classpath
+bin/

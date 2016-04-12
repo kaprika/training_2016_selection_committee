@@ -19,7 +19,7 @@
 		<!-- <module>webapp</module> -->
 	</modules>
 
-	<!-- dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
 
 			<dependency>
@@ -29,7 +29,7 @@
 			</dependency>
 
 		</dependencies>
-	</dependencyManagement -->
+	</dependencyManagement>
 
 	<build>
 
